@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comments</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: radial-gradient(#424242, #819FF7);
+            
+        }
+        .comments-container {
+            width: 72.8rem;
+            height: 62.3rem;
+            background-color: black;
+            padding: 3rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            border-radius: 10px;
+            color: #F1F1F1;
+            font-size: 1.4rem
+        }
+        h1 {
+            font-family: "Roboto", "Arial", sans-seri
+            text-align: center;
+            color: #F1F1F1;
+            font-size: 3rem;
+        }
+        .comment {
+            margin-bottom: 1rem;
+        }
+        .title {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .back-button{
+            margin-top: 2rem;
+            padding: 1rem 2rem;
+            background-color: #2E2EFE;
+            color: #F1F1F1;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 600;
+        }
+        .back-button:hover {
+            background-color: #5882FA;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="title"></h1>
+    <div class="comments-container">
+        <div>
+            {% for comment in comments %}
+                <div class="comment">{{ comment }}</div>
+            {% endfor %}
+        </div>
+    </div>
+    <button class="back-button" onclick="window.location.href='{{ url_for('index') }}'">이전</button>
+</body>
+</html>
