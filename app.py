@@ -1,5 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, Response
 from googleapiclient.discovery import build
+import csv
+import io
 
 app = Flask(__name__)
 
@@ -38,6 +40,28 @@ def comments(video_id):
         else:
             break
     return render_template('comments.html', comments=comments)
+
+@app.route('/download', methods=['POST'])
+def download():
+    video_id = request.form['video_id']
+    comments_str = request.form['comments']
+    comments = comments_str.split('|')
+
+    # Create a CSV file in memory
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(['Comment'])
+    for comment in comments:
+        writer.writerow([comment])
+
+    bom = '\ufeff'
+    csv_content = bom + output.getvalue()
+    
+    # Generate a response with the CSV file
+    response = Response(csv_content, mimetype='text/csv')
+    response.headers['Content-Disposition'] = f'attachment; filename=comments_{video_id}.csv'
+    return response
+
 
 if __name__ == '__main__':
     app.run(debug=True)
