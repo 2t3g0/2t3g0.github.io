@@ -19,6 +19,7 @@ def index():
 
 @app.route('/comments/<string:video_id>')
 def comments(video_id):
+    count = 0
     comments = []
     response = youtube.commentThreads().list(
         part='snippet',
@@ -26,7 +27,7 @@ def comments(video_id):
         textFormat='plainText'
     ).execute()
 
-    while response:
+    while response and count < 20:
         for item in response['items']:
             comment = item['snippet']['topLevelComment']['snippet']['textDisplay']
             comments.append(comment)
@@ -39,6 +40,7 @@ def comments(video_id):
             ).execute()
         else:
             break
+        count=count+1
     return render_template('comments.html', comments=comments)
 
 @app.route('/download', methods=['POST'])
