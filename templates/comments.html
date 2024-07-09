@@ -55,6 +55,11 @@
         .back-button:hover {
             background-color: #5882FA;
         }
+        .button_container{
+            display: flex;
+            gap: 2rem;
+        }
+
     </style>
 </head>
 <body>
@@ -66,6 +71,13 @@
             {% endfor %}
         </div>
     </div>
-    <button class="back-button" onclick="window.location.href='{{ url_for('index') }}'">이전</button>
+    <div class="button_container">
+        <button class="back-button" onclick="window.location.href='{{ url_for('index') }}'">이전</button>
+        <form action="{{ url_for('download') }}" method="post">
+            <input type="hidden" name="video_id" value="{{ video_id }}">
+            <input type="hidden" name="comments" value="{{ comments | join('|') }}">
+            <button class="back-button" type="submit">다운로드</button>
+        </form>
+    </div>
 </body>
 </html>
