@@ -80861,7 +80861,7 @@ $1(a){var s=document.createElement("iframe"),r=s.style
 r.width="100%"
 r=s.style
 r.height="100%"
-s.src="assets/map.html"
+s.src="assets/assets/map.html"
 r=s.style
 r.border="none"
 return s},
