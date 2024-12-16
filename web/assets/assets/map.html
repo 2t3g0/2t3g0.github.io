@@ -1,7 +1,7 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>네이버 지도</title>
@@ -13,62 +13,353 @@
             margin: 0; /* 추가 여백 제거 */
             padding: 0; /* 추가 여백 제거 */
         }
+        #dialog {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        #dialog button {
+            margin-top: 10px;
+        }
+        .custom-text {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1C1C1C; /* 파란색 */
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* 글자 그림자 */
+        margin: 0;
+        text-align: center;
+        font-family: 'Arial', sans-serif; /* 폰트 */
+    }
     </style>
 </head>
 <body>
 <div id="map"></div>
 
+<!-- Dialog Box -->
+<div id="dialog">
+    <p id="dialog-content"></p>
+    <button onclick="closeDialog()">확인</button>
+</div>
+
 <script>
     // 지도 초기화
     var mapOptions = {
-        center: new naver.maps.LatLng(35.1018526, 129.0259122), // 초기 좌표
-        zoom: 15,
+        center: new naver.maps.LatLng(35.1015369, 129.028187), // 초기 좌표
+        zoom: 22,
         mapTypeControl: true,
         zoomControl: true,
         indoorEnable: true,
     };
     var map = new naver.maps.Map('map', mapOptions);
 
-    // 장소 데이터
-    var places = {
-        "국제시장": {
-            coordinates: new naver.maps.LatLng(35.10066129734868, 129.0282440185547),
-            description: "전통적인 문화유산.",
-            id: "10"
-        },
-        "깡통시장": {
-            coordinates: new naver.maps.LatLng(35.1018526, 129.0259122),
-            description: "1910년대 최초의 공설시장 및 등록시장으로 부평사거리 시장과 한국전쟁을 이어 내려온 강한 생명력을 지닌 대한민국 대표시장.",
-            id: "400005"
-        }
-    };
 
-    for (var placeName in places) {
-        var placeData = places[placeName];
-        var coordinates = placeData.coordinates;
-        var description = placeData.description;
-        var placeId = placeData.id;
-
-        // 마커 생성
-        var marker = new naver.maps.Marker({
-            position: coordinates,
-            map: map,
-            title: placeName,
-            id: placeId,
-        });
-
-        // 인포윈도우 생성
-        var infowindow = new naver.maps.InfoWindow({
-            content: '<div style="padding:5px;">' + placeName + '<br>' + description + '</div>'
-        });
-
-        // 마커 클릭 시 해당 마커에 인포윈도우 열기
-        (function(marker, infowindow) {
-            naver.maps.Event.addListener(marker, 'click', function() {
-                infowindow.open(map, marker);
-            });
-        })(marker, infowindow);  // 즉시 실행 함수로 marker와 infowindow를 바인딩
+    // Dialog 닫기
+    function closeDialog() {
+        var dialog = document.getElementById('dialog');
+        dialog.style.display = 'none';
     }
+    naver.maps.Event.addListener(map, 'click', function(e) {
+        // 클릭된 좌표 가져오기
+        var coord = e.coord;
+        var lat = coord.lat();
+        var lng = coord.lng();
+
+        // Dialog 업데이트 및 열기
+        openDialogWithCoords(lat, lng);
+    });
+    // Dialog 업데이트 및 열기 함수
+        function openDialogWithCoords(lat, lng) {
+        var dialog = document.getElementById('dialog');
+        var dialogContent = document.getElementById('dialog-content');
+
+        // 좌표 내용을 Dialog에 표시
+        dialogContent.innerHTML = '위도: ' + lat + '<br>경도: ' + lng;
+
+        // Dialog 표시
+        dialog.style.display = 'block';
+    }
+    var polygon = new naver.maps.Polygon({
+    map: map,
+    paths: [
+        [
+            new naver.maps.LatLng(35.1017124, 129.0282018),
+            new naver.maps.LatLng(35.1017124, 129.0281729),
+            new naver.maps.LatLng(35.1013728, 129.0281729),
+            new naver.maps.LatLng(35.1013728, 129.0282018),
+
+        ]
+    ],
+    fillColor: '#FFFFFF',
+    fillOpacity: 1,
+    strokeColor: '#E6E6E6',
+    strokeOpacity: 0.6,
+    strokeWeight: 1
+});
+
+    var polygon21 = new naver.maps.Polygon({
+    map: map,
+    paths: [
+        [
+            new naver.maps.LatLng(35.1015824, 129.0281535),
+            new naver.maps.LatLng(35.1015824, 129.0280516),
+            new naver.maps.LatLng(35.1015467, 129.0280516),
+            new naver.maps.LatLng(35.1015467, 129.0281535),
+
+        ]
+    ],
+    fillColor: '#F5D0A9',
+    fillOpacity: 1,
+    strokeColor: '#E6E6E6',
+    strokeOpacity: 0.6,
+    strokeWeight: 2
+});
+
+    var polygon2 = new naver.maps.Polygon({
+    map: map,
+    paths: [
+        [
+            new naver.maps.LatLng(35.1017042, 129.0282159),
+            new naver.maps.LatLng(35.1017042, 129.0282675),
+            new naver.maps.LatLng(35.1016504, 129.0282675),
+            new naver.maps.LatLng(35.1016504, 129.0282159),
+
+        ]
+    ],
+    fillColor: '#F5D0A9',
+    fillOpacity: 1,
+    strokeColor: '#E6E6E6',
+    strokeOpacity: 0.6,
+    strokeWeight: 2
+});
+    var polygon3 = new naver.maps.Polygon({
+    map: map,
+    paths: [
+        [
+            new naver.maps.LatLng(35.1016444, 129.0282159),
+            new naver.maps.LatLng(35.1016444, 129.0282675),
+            new naver.maps.LatLng(35.1015862, 129.0282675),
+            new naver.maps.LatLng(35.1015862, 129.0282159),
+
+        ]
+    ],
+    fillColor: '#F5D0A9',
+    fillOpacity: 1,
+    strokeColor: '#E6E6E6',
+    strokeOpacity: 0.6,
+    strokeWeight: 2
+});
+    var polygon4 = new naver.maps.Polygon({
+    map: map,
+    paths: [
+        [
+            new naver.maps.LatLng(35.1015851, 129.0282159),
+            new naver.maps.LatLng(35.1015851, 129.0282675),
+            new naver.maps.LatLng(35.1015435, 129.0282675),
+            new naver.maps.LatLng(35.1015435, 129.0282159),
+
+        ]
+    ],
+    fillColor: '#F5D0A9',
+    fillOpacity: 1,
+    strokeColor: '#E6E6E6',
+    strokeOpacity: 0.6,
+    strokeWeight: 2
+});
+    var polygon5 = new naver.maps.Polygon({
+    map: map,
+    paths: [
+        [
+            new naver.maps.LatLng(35.1017036, 129.0281515),
+            new naver.maps.LatLng(35.1017036, 129.0281039),
+            new naver.maps.LatLng(35.1015862, 129.0281039),
+            new naver.maps.LatLng(35.1015862, 129.0281515),
+
+        ]
+    ],
+    fillColor: '#F5D0A9',
+    fillOpacity: 1,
+    strokeColor: '#E6E6E6',
+    strokeOpacity: 0.6,
+    strokeWeight: 2
+});
+    var polygon6 = new naver.maps.Polygon({
+    map: map,
+    paths: [
+        [
+            new naver.maps.LatLng(35.1017004, 129.0280948),
+            new naver.maps.LatLng(35.1017004, 129.0279882),
+            new naver.maps.LatLng(35.1015846, 129.0279882),
+            new naver.maps.LatLng(35.1015846, 129.0280948),
+
+        ]
+    ],
+    fillColor: '#F5D0A9',
+    fillOpacity: 1,
+    strokeColor: '#E6E6E6',
+    strokeOpacity: 0.6,
+    strokeWeight: 2
+});
+    var polygon7 = new naver.maps.Polygon({
+    map: map,
+    paths: [
+        [
+            new naver.maps.LatLng(35.1015451, 129.0280459),
+            new naver.maps.LatLng(35.1015451, 129.0279875),
+            new naver.maps.LatLng(35.1015791, 129.0279875),
+            new naver.maps.LatLng(35.1015791, 129.0280459),
+
+        ]
+    ],
+    fillColor: '#F5D0A9',
+    fillOpacity: 1,
+    strokeColor: '#E6E6E6',
+    strokeOpacity: 0.6,
+    strokeWeight: 2
+});
+    var polygon8 = new naver.maps.Polygon({
+    map: map,
+    paths: [
+        [
+            new naver.maps.LatLng(35.1017004, 129.0282822),
+            new naver.maps.LatLng(35.1016987, 129.028356),
+            new naver.maps.LatLng(35.1016751, 129.0283828),
+            new naver.maps.LatLng(35.1015928, 129.0283862),
+            new naver.maps.LatLng(35.1015928, 129.0282735),
+
+
+        ]
+    ],
+    fillColor: '#F5D0A9',
+    fillOpacity: 1,
+    strokeColor: '#E6E6E6',
+    strokeOpacity: 0.6,
+    strokeWeight: 2
+});
+    var polygon9 = new naver.maps.Polygon({
+    map: map,
+    paths: [
+        [
+            new naver.maps.LatLng(35.1015797, 129.0283868),
+            new naver.maps.LatLng(35.1015797, 129.0282749),
+            new naver.maps.LatLng(35.1015429, 129.0282749),
+            new naver.maps.LatLng(35.1015429, 129.0283868),
+
+        ]
+    ],
+    fillColor: '#F5D0A9',
+    fillOpacity: 1,
+    strokeColor: '#E6E6E6',
+    strokeOpacity: 0.6,
+    strokeWeight: 2
+});
+
+
+
+    var Marker1 = new naver.maps.Marker({
+    position: new naver.maps.LatLng(35.1015555, 129.0282413),
+    map: map,
+    title: 'Green',
+    icon: {
+        content: [
+                    '<div class="cs_mapbridge">',
+                        '<div class="map_group _map_group crs">',
+                            '<div class="map_marker _marker num1 num1_big"> ',
+                                '<span class="ico _icon"></span>',
+                                '<span class="shd"></span>',
+                            '</div>',
+                        '</div>',
+                    '</div>',
+                    '<div style="position: absolute; top: 0px; left: 50%; transform: translateX(-50%); color: black; font-size: 16px; font-weight: bold; font-family: Roboto, sans-serif; white-space: nowrap;">꽃분이네</div>' // 텍스트 가로로 설정
+                ].join(''),
+        size: new naver.maps.Size(10, 20),
+    },
+});
+    var Marker2 = new naver.maps.Marker({
+    position: new naver.maps.LatLng(35.1016131, 129.0282433),
+    map: map,
+    title: 'Green',
+    icon: {
+        content: [
+                    '<div class="cs_mapbridge">',
+                        '<div class="map_group _map_group crs">',
+                            '<div class="map_marker _marker num1 num1_big"> ',
+                                '<span class="ico _icon"></span>',
+                                '<span class="shd"></span>',
+                            '</div>',
+                        '</div>',
+                    '</div>',
+                    '<div style="position: absolute; top: 0px; left: 50%; transform: translateX(-50%); color: black; font-size: 16px; font-weight: bold; font-family: Roboto, sans-serif; white-space: nowrap;">서울공예사</div>' // 텍스트 가로로 설정
+                ].join(''),
+        size: new naver.maps.Size(10, 20),
+    },
+});
+    var Marker3 = new naver.maps.Marker({
+    position: new naver.maps.LatLng(35.1016729, 129.028244),
+    map: map,
+    title: 'Green',
+    icon: {
+        content: [
+                    '<div class="cs_mapbridge">',
+                        '<div class="map_group _map_group crs">',
+                            '<div class="map_marker _marker num1 num1_big"> ',
+                                '<span class="ico _icon"></span>',
+                                '<span class="shd"></span>',
+                            '</div>',
+                        '</div>',
+                    '</div>',
+                    '<div style="position: absolute; top: 0px; left: 50%; transform: translateX(-50%); color: black; font-size: 16px; font-weight: bold; font-family: Roboto, sans-serif; white-space: nowrap;">신우악세사리</div>' // 텍스트 가로로 설정
+                ].join(''),
+        size: new naver.maps.Size(10, 20),
+    },
+});
+    var Marker4 = new naver.maps.Marker({
+    position: new naver.maps.LatLng(35.1015544, 129.0281126),
+    map: map,
+    title: 'Green',
+    icon: {
+        content: [
+                    '<div class="cs_mapbridge">',
+                        '<div class="map_group _map_group crs">',
+                            '<div class="map_marker _marker num1 num1_big"> ',
+                                '<span class="ico _icon"></span>',
+                                '<span class="shd"></span>',
+                            '</div>',
+                        '</div>',
+                    '</div>',
+                    '<div style="position: absolute; top: 0px; left: 50%; transform: translateX(-50%); color: black; font-size: 16px; font-weight: bold; font-family: Roboto, sans-serif; white-space: nowrap;">금성생필품</div>' // 텍스트 가로로 설정
+                ].join(''),
+        size: new naver.maps.Size(10, 20),
+    },
+});
+    var Marker5 = new naver.maps.Marker({
+    position: new naver.maps.LatLng(35.1016356, 129.028126),
+    map: map,
+    title: 'Green',
+    icon: {
+        content: [
+                    '<div class="cs_mapbridge">',
+                        '<div class="map_group _map_group crs">',
+                            '<div class="map_marker _marker num1 num1_big"> ',
+                                '<span class="ico _icon"></span>',
+                                '<span class="shd"></span>',
+                            '</div>',
+                        '</div>',
+                    '</div>',
+                    '<div style="position: absolute; top: 0px; left: 50%; transform: translateX(-50%); color: black; font-size: 16px; font-weight: bold; font-family: Roboto, sans-serif; white-space: nowrap;">삼성도기</div>' // 텍스트 가로로 설정
+                ].join(''),
+        size: new naver.maps.Size(10, 20),
+    },
+});
+
+
+
+
 </script>
 </body>
 </html>
